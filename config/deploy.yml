@@ -53,7 +53,7 @@ env:
 
 accessories:
   db:
-    image: mariadb:10
+    image: mariadb:11.4.5
     host: <%= ENV['BOOKLORE_HOST'] %>
     volumes:
       - /data/booklore/mariadb:/var/lib/mysql
