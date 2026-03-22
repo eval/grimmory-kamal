@@ -1,5 +1,5 @@
-# Kamal 2 deployment configuration for BookLore
-# https://github.com/booklore-app/booklore
+# Kamal 2 deployment configuration for Grimmory (successor of BookLore)
+# https://github.com/grimmory-tools/grimmory
 #
 # All customization is done via environment variables in mise.local.toml
 # See mise.local.toml.example for required variables

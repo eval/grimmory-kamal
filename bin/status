@@ -9,17 +9,17 @@ echo "Currently running: ${deployed:-unknown}"
 echo
 
 echo "=== Latest Releases ==="
-gh release list --repo booklore-app/booklore --limit 5
+gh release list --repo grimmory-tools/grimmory --limit 5
 echo
 
-latest=$(gh release list --repo booklore-app/booklore --limit 1 --json tagName -q '.[0].tagName')
+latest=$(gh release list --repo grimmory-tools/grimmory --limit 1 --json tagName -q '.[0].tagName')
 echo "=== Status ==="
 if [ "$deployed" = "$latest" ]; then
   echo "✓ Up to date"
 else
   echo "⚠ Update available: $deployed → $latest"
   echo
-  echo "View changes: https://github.com/booklore-app/booklore/compare/$deployed...$latest"
+  echo "View changes: https://github.com/grimmory-tools/grimmory/compare/$deployed...$latest"
   echo
   echo "To upgrade: ./bin/deploy"
 fi

@@ -1,7 +1,7 @@
 # Wrapper Dockerfile for Kamal deployment
 # Pulls the official BookLore image and allows Kamal to add required labels
 ARG VERSION=latest
-FROM ghcr.io/booklore-app/booklore:${VERSION}
+FROM ghcr.io/grimmory-tools/grimmory:${VERSION}
 ARG VERSION
 ARG KAMAL_REGISTRY_USERNAME
 ENV BOOKLORE_VERSION=${VERSION}

@@ -8,7 +8,7 @@ if [ -n "$1" ]; then
   VERSION="$1"
 else
   echo "Fetching latest BookLore release..."
-  VERSION=$(gh release list --repo booklore-app/booklore --limit 1 --json tagName -q '.[0].tagName')
+  VERSION=$(gh release list --repo grimmory-tools/grimmory --limit 1 --json tagName -q '.[0].tagName')
 fi
 
 if [ -z "$VERSION" ]; then
