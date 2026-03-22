@@ -1,6 +1,7 @@
-# BookLore Kamal Deployment
+# Grimmory Kamal Deployment
 
-Deploy [BookLore](https://github.com/booklore-app/booklore) to your own server using [Kamal 2](https://kamal-deploy.org/).
+Deploy [Grimmory](https://github.com/grimmory-tools/grimmory) (formerly Booklore) to your own server using [Kamal 2](https://kamal-deploy.org/).
+
 ## Prerequisites
 
 - A server with SSH access
@@ -11,8 +12,8 @@ Deploy [BookLore](https://github.com/booklore-app/booklore) to your own server u
 ### 1. Clone and run setup
 
 ```bash
-git clone https://github.com/eval/booklore-kamal.git
-cd booklore-kamal
+git clone https://github.com/eval/grimmory-kamal.git
+cd grimmory-kamal
 ./bin/setup
 ```
 
@@ -118,4 +119,4 @@ mise exec -- bin/kamal details
 
 ## License
 
-MIT. BookLore itself is licensed under [GPL-3.0](https://github.com/booklore-app/booklore/blob/main/LICENSE).
+MIT. Grimmory itself is licensed under [GPL-3.0](https://github.com/grimmory-tools/grimmory/blob/main/LICENSE).
