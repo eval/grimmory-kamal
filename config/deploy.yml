@@ -5,7 +5,7 @@
 # See mise.local.toml.example for required variables
 
 service: booklore
-image: <%= ENV['KAMAL_REGISTRY_USERNAME'] %>/booklore
+image: <%= ENV['KAMAL_REGISTRY_USERNAME'] %>/grimmory
 
 deploy_timeout: 300
 
