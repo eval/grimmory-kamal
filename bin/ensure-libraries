@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Read libraries.local and ensure each named subdirectory exists on the host
+# under /data/booklore/libraries/<name>, owned by 1000:1000.
+#
+# Idempotent: safe to re-run after adding new entries to libraries.local.
+# Does NOT remove libraries that have been deleted from the list; that's
+# left as a manual host operation since dropping a directory is destructive.
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+if [ ! -f libraries.local ]; then
+  echo -e "${RED}✗ libraries.local not found${NC}"
+  echo -e "  Copy ${BOLD}libraries.local.example${NC} to ${BOLD}libraries.local${NC} and edit."
+  exit 1
+fi
+
+if [ -z "${BOOKLORE_HOST:-}" ]; then
+  echo -e "${RED}✗ BOOKLORE_HOST is not set${NC}"
+  echo -e "  Run this through mise: ${YELLOW}mise exec -- bin/ensure-libraries${NC}"
+  exit 1
+fi
+
+names=()
+while IFS= read -r line || [ -n "$line" ]; do
+  # strip leading/trailing whitespace
+  trimmed="$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  [ -z "$trimmed" ] && continue
+  case "$trimmed" in '#'*) continue ;; esac
+
+  # validate: no slashes, no whitespace, no leading dot
+  if ! printf '%s' "$trimmed" | grep -Eq '^[A-Za-z0-9_-]+$'; then
+    echo -e "${RED}✗ Invalid library name: '${trimmed}'${NC}"
+    echo -e "  Allowed characters: letters, digits, underscore, hyphen."
+    exit 1
+  fi
+
+  names+=("$trimmed")
+done < libraries.local
+
+if [ ${#names[@]} -eq 0 ]; then
+  echo -e "${YELLOW}No libraries listed in libraries.local — nothing to do.${NC}"
+  exit 0
+fi
+
+echo -e "${BLUE}${BOLD}=== Ensuring ${#names[@]} library directories on ${BOOKLORE_HOST} ===${NC}"
+
+# Build a single ssh payload to minimize round-trips.
+payload=""
+for name in "${names[@]}"; do
+  payload+="mkdir -p /data/booklore/libraries/${name} && chown 1000:1000 /data/booklore/libraries/${name} && echo '  ✓ ${name}'"$'\n'
+done
+
+# shellcheck disable=SC2029
+ssh "root@${BOOKLORE_HOST}" "set -e; ${payload}"
+
+echo -e "${GREEN}${BOLD}Done.${NC} In Grimmory's UI add each library at ${BOLD}/libraries/<name>${NC}."

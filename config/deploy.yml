@@ -29,7 +29,7 @@ servers:
     options:
       volume:
         - /data/booklore/data:/app/data
-        - /data/booklore/books:/books
+        - /data/booklore/libraries:/libraries
         - /data/booklore/bookdrop:/bookdrop
 
 proxy:

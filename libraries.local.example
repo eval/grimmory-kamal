@@ -1,0 +1,19 @@
+# Copy this file to libraries.local and edit.
+# libraries.local is gitignored.
+#
+# Each non-empty, non-comment line is one Grimmory library.
+# The name becomes the subdirectory under /data/booklore/libraries/
+# on the host, mounted as /libraries/<name> inside the container.
+#
+# Then in Grimmory's UI: Settings -> Libraries -> Add Library,
+# set the path to /libraries/<name>.
+#
+# Rules:
+#   - one name per line
+#   - no slashes, no whitespace
+#   - lines starting with # are ignored
+#
+# Run `bin/ensure-libraries` after editing this file to create
+# any new subdirectories on the host (idempotent).
+
+main

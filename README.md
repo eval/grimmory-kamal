@@ -41,17 +41,45 @@ BOOKLORE_DB_ROOT_PASSWORD = "your-secure-root-password"
 
 **Note:** `deploy.yml` uses ERB to read these environment variables, so you never need to edit it directly. This means you can `git pull` updates without merge conflicts.
 
-### 3. Deploy
+### 3. List your libraries
+
+Edit `libraries.local` — one Grimmory library per line. Each name becomes a subdirectory under `/data/booklore/libraries/<name>` on the host, mounted as `/libraries/<name>` inside the container.
+
+```
+# libraries.local
+main
+bibliotheek
+```
+
+`libraries.local` is gitignored. Keep your real list there; `libraries.local.example` shows the syntax.
+
+### 4. Deploy
 
 ```bash
 mise exec -- bin/kamal setup
 ```
 
-This sets up everything needed on a fresh host and deploys BookLore. Further details at [Kamal docs](https://kamal-deploy.org/docs/commands/setup/).
+This sets up everything needed on a fresh host (including the directories listed in `libraries.local`) and deploys Grimmory. Further details at [Kamal docs](https://kamal-deploy.org/docs/commands/setup/).
 
-### 4. Access BookLore
+### 5. Access Grimmory
 
 Open `https://your-domain.com` in your browser. SSL certificates are automatically provisioned by kamal-proxy via Let's Encrypt.
+
+For each library listed in `libraries.local`, go to **Settings → Libraries → Add Library** in the UI and set the path to `/libraries/<name>`.
+
+## Managing libraries
+
+Grimmory's "Add Library" expects the folder to already exist on the host with the right ownership; this repo handles that via `libraries.local` + `bin/ensure-libraries`.
+
+To add a library:
+
+1. Append a line to `libraries.local` (one short name, e.g. `dad-books`).
+2. Run `mise exec -- bin/ensure-libraries` — idempotent; SSH's to the host and creates `/data/booklore/libraries/<name>` owned by `1000:1000`.
+3. In the UI: **Settings → Libraries → Add Library**, path `/libraries/<name>`.
+
+Removing a library from `libraries.local` does **not** delete anything on the host — that's left as a manual step (and you'll usually want to delete the library in the Grimmory UI first to clean up DB rows).
+
+**Don't nest libraries.** Each library's path should be a direct subfolder of `/libraries/` (e.g. `/libraries/main`, `/libraries/bibliotheek`) — never one inside another. Nesting causes the scanner to index the same files twice.
 
 ## Checking for Updates
 

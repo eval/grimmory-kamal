@@ -33,8 +33,20 @@ if [ ! -f mise.local.toml ]; then
   echo
   echo -e "${YELLOW}${BOLD}Next steps:${NC}"
   echo -e "  1. Edit ${BOLD}mise.local.toml${NC} with your server IP, domain, and credentials"
-  echo -e "  2. Deploy: ${YELLOW}mise exec -- bin/kamal setup${NC}"
+  echo -e "  2. Edit ${BOLD}libraries.local${NC} to list your library subfolders"
+  echo -e "  3. Deploy: ${YELLOW}mise exec -- bin/kamal setup${NC}"
 else
   echo
   echo -e "${GREEN}✓ mise.local.toml already exists${NC}"
+fi
+
+if [ ! -f libraries.local ]; then
+  echo
+  echo -e "${BLUE}${BOLD}=== Creating libraries.local ===${NC}"
+  cp libraries.local.example libraries.local
+  echo -e "${GREEN}✓ Created libraries.local from example${NC}"
+  echo -e "  Each line becomes ${BOLD}/libraries/<name>${NC} in the container; run ${YELLOW}bin/ensure-libraries${NC} after editing."
+else
+  echo
+  echo -e "${GREEN}✓ libraries.local already exists${NC}"
 fi

@@ -2,5 +2,11 @@
 
 for host in $(echo "$KAMAL_HOSTS" | tr ',' ' '); do
   echo "Creating data directories on $host..."
-  ssh root@$host 'mkdir -p /data/booklore/{data,books,bookdrop,mariadb} && chown -R 1000:1000 /data/booklore/{data,books,bookdrop}'
+  ssh root@$host 'mkdir -p /data/booklore/{data,libraries,bookdrop,mariadb} && chown -R 1000:1000 /data/booklore/{data,libraries,bookdrop}'
 done
+
+# Provision the library subfolders listed in libraries.local (gitignored).
+if [ -f libraries.local ]; then
+  echo "Ensuring library subfolders from libraries.local..."
+  bin/ensure-libraries
+fi
