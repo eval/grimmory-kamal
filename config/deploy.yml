@@ -26,6 +26,11 @@ servers:
   web:
     hosts:
       - <%= ENV['BOOKLORE_HOST'] %>
+    labels:
+      # Watched by the autoheal accessory: restart this container when
+      # its Docker health status turns unhealthy (the JVM can hang while
+      # the process stays alive, so restart-on-exit never fires).
+      autoheal: "true"
     options:
       volume:
         - /data/booklore/data:/app/data
@@ -69,3 +74,16 @@ accessories:
         - MYSQL_ROOT_PASSWORD
         - MYSQL_USER
         - MYSQL_PASSWORD
+
+  # Restarts any container labeled autoheal=true when Docker marks it
+  # unhealthy. Needed because kamal-proxy only stops routing to an
+  # unhealthy container; nothing else restarts it.
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    host: <%= ENV['BOOKLORE_HOST'] %>
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env:
+      clear:
+        AUTOHEAL_CONTAINER_LABEL: autoheal
+        AUTOHEAL_INTERVAL: "30"
